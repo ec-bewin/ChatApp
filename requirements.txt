@@ -1,0 +1,4 @@
+fastapi      ==     0.115.11
+alembic    ==       1.15.1
+SQLAlchemy  ==      2.0.38
+sqladmin    ==      0.20.1
