@@ -1,32 +1,41 @@
 
-
-from  chat.schemas import Chat
-from typing import List, Optional
-from fastapi import Depends
 from datetime import datetime
-from db import get_async_mongo
+import uuid
 
 
+async def create_chat(data, db):
+   
+    chat_type = data.chat_type
+    name = data.name
+    image = data.image
+   
+   
+    chat_id = uuid.uuid4()
 
-async def create_chat(
-    members: List[int],
-    name: Optional[str] = None,
-    chat_type: Optional[str] = "chat",
-     db=Depends(get_async_mongo)
-):
-    
+    members_data = [
+        {"chat_id": str(chat_id), "user_id": member.user_id}
+        for member in data.members
+    ]
     chat_data = {
+        "id": str(chat_id), 
         "chat_type": chat_type,
+        "members":members_data,
         "name": name,
-        "members": members,
+        "image": image,
+       
+       
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow()
     }
-    chat_data["id"] = str(result.inserted_id)
 
-    result = await db["chats"].insert_one(chat_data)
-   
+    await db["chats"].insert_one(chat_data)
+    data ={
+        "chat_id":str({chat_id})
+    }
 
-    return result
-   
+    return {
+        
+        "data": data,
+        "message": "Chat created successfully"
+    }
     

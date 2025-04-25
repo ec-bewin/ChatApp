@@ -105,3 +105,4 @@ static/rest_framework/
 static/vendor/
 staticfiles/
 .qodo
+db.sqlite3

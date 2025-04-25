@@ -2,15 +2,27 @@
 from fastapi import FastAPI,Request,HTTPException
 from user.urls import router as urls_router
 from chat.urls import router as chat_router
+from ws.urls import router as ws_router
 from sqladmin import Admin
 from user.admin import UserAdmin
 from db import sync_engine
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from response import ErrorResponse
-from exception_handler import custom_exception_handler
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+import logging
+logger = logging.getLogger(__name__)
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 @app.exception_handler(404)
@@ -52,8 +64,22 @@ admin.add_view(UserAdmin)
 app.include_router(urls_router, prefix="/api/v1/users")
 app.include_router(chat_router, prefix="/api/v1/chats")
 
+connected_users = {}
 
-#
+@app.websocket("/ws/chats/")
+async def websocket_endpoint( websocket: WebSocket):
+    await websocket.accept()
+
+    try:
+        while True:
+            data = await websocket.receive_text()
+          
+            
+    except:
+      
+     
+        await websocket.close()
+
 @app.get("/")
 async def read_root():
     return {"message": "Hello, FastAPI!"}

@@ -6,24 +6,26 @@ from pydantic import ConfigDict,Field
 from typing_extensions import Annotated
 
 
+# Member Model
+class Member(BaseModel):
+    chat_id: Optional[str] = None 
+    user_id: str 
+
+    def __repr__(self):
+        return f"Member(chat_id={self.chat_id}, user_id={self.user_id})"
+    
 class Chat(BaseModel):
-    id: Optional[int] = None 
+    id: Optional[str] = None
     
     chat_type: str  # Either "CHAT" or "GROUP"
     name: Optional[str] = None
     image: Optional[str] = None
-    members: List[int]  
+    members : List[Member]
+
     created_at: datetime = datetime.utcnow()
     updated_at: datetime = datetime.utcnow()
 
     
-# Member Model
-class Member(BaseModel):
-    chat_id: int  
-    user_id: int 
-
-    def __repr__(self):
-        return f"Member(chat_id={self.chat_id}, user_id={self.user_id})"
 
 # Message Model
 class Message(BaseModel):

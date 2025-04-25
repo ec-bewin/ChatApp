@@ -16,7 +16,7 @@ elif command == "migrate":
     os.system("alembic upgrade head")
 
 elif command == "runserver":
-    os.system("uvicorn main:app --reload --port 8001")
+    os.system("uvicorn main:app --reload --port 5000")
 
 
 elif command == "createapp":
